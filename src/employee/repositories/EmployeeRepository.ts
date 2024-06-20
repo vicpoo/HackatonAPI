@@ -53,7 +53,6 @@ export class EmployeeRepository {
   public static async updateEmployee(employee_id: number, employeeData: Employee): Promise<Employee | null> {
     const query = 'UPDATE employee SET full_name = ?, role_id_fk = ?, updated_at = ?, updated_by = ?, deleted = ? WHERE employee_id = ?';
     return new Promise((resolve, reject) => {
-      console.log(employeeData);
       connection.execute(query, [employeeData.full_name, employeeData.role_id_fk, employeeData.updated_at, employeeData.updated_by, employeeData.deleted, employee_id], (error, result: ResultSetHeader) => {
         if (error) {
           reject(error);

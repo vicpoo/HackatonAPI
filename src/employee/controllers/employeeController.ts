@@ -64,6 +64,4 @@ export const deleteEmployee = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
-  await employeeService.deleteEmployee(parseInt(req.params.employee_id, 10));
-  res.status(201).send();
 };
