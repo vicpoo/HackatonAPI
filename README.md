@@ -1,8 +1,32 @@
-npm install;
 
-npm run dev;
+# API para tienda (Práctica)
 
-DATABASE:
+API desarrollada en express con Typescript como ejemplo para clase de fundamento de base de datos.
+
+Descargar módulos
+* npm install
+
+Iniciar proyecto
+* npm run dev
+
+Construir app
+* npm run start
+
+# Ejemplo de variables de entorno (.env)
+DB_HOST=localhost
+
+DB_PORT=3306
+
+DB_USER=pedro
+
+DB_PASSWORD=1234
+
+DB_NAME=tienda_familiar
+
+PORT=8000
+
+# Construcción de base de datos
+
 create database tienda_familiar;
 use tienda_familiar;
 create table product (
