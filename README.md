@@ -1,4 +1,3 @@
-
 # API para tienda (Práctica)
 
 API desarrollada en express con Typescript como ejemplo para clase de fundamento de base de datos.
