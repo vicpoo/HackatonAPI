@@ -2,7 +2,7 @@ export interface Clients{
     clients_id: number;
     fullname:string;
     email:string;
-    phone:number;
+    phone:string;
     address:string;
     created_at: String;
     created_by: string;
