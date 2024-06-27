@@ -17,7 +17,7 @@ export const getCoffee = async (_req: Request, res: Response) => {
 
 export const getCoffeeById = async (req: Request, res: Response) => {
   try {
-    const coffee = await coffeeService.getCoffeeById(parseInt(req.params.clients_id, 10));
+    const coffee = await coffeeService.getCoffeeById(parseInt(req.params.coffee_id, 10));
     if(coffee){
       res.status(201).json(coffee);
     }else{

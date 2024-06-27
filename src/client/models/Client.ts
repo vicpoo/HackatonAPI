@@ -1,5 +1,5 @@
-export interface Clients{
-    clients_id: number;
+export interface Client{
+    client_id: number;
     fullname:string;
     email:string;
     phone:string;

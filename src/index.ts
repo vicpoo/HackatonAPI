@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 
 // Importar rutas de módulos
 import employeeRoutes from './employee/routes/employeeRoutes';
-import clientsRoutes from './clients/routes/clientsRoutes';
+import clientRoutes from './client/routes/clientRoutes';
 import coffeeRoutes from './coffee/routes/coffeeRoutes';
 
 // Importar middlewares compartidos
@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Rutas de los módulos
 app.use('/api/employee', employeeRoutes);
-app.use('/api/clients', clientsRoutes);
+app.use('/api/client', clientRoutes);
 app.use('/api/coffee',coffeeRoutes);
 
 // Middleware para manejar rutas no encontradas
