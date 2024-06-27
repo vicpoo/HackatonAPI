@@ -6,6 +6,7 @@ import * as dotenv from 'dotenv';
 import employeeRoutes from './employee/routes/employeeRoutes';
 import clientRoutes from './client/routes/clientRoutes';
 import coffeeRoutes from './coffee/routes/coffeeRoutes';
+import userRoutes from './user/routes/userRoutes'
 
 // Importar middlewares compartidos
 import { errorHandler } from './shared/middlewares/errorHandler';
@@ -26,6 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/employee', employeeRoutes);
 app.use('/api/client', clientRoutes);
 app.use('/api/coffee',coffeeRoutes);
+app.use('/api/user', userRoutes);
 
 // Middleware para manejar rutas no encontradas
 app.use(notFoundHandler);

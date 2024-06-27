@@ -79,9 +79,9 @@ export class coffeeService {
         }
     }
 
-    public static async deleteCoffee(coffeeId: number): Promise<boolean> {
+    public static async deleteCoffee(coffee_Id: number): Promise<boolean> {
         try{
-            return await CoffeeRepository.deleteCoffee(coffeeId);
+            return await CoffeeRepository.deleteCoffee(coffee_Id);
         }catch (error: any){
             throw new Error(`Error al eliminar el cafe: ${error.message}`);
         }
