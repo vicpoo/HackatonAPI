@@ -6,7 +6,7 @@ export class ClientRepository {
 
   public static async findAll(): Promise<Client[]> {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT client_id, fullname, address FROM client', (error: any, results) => {
+      connection.query('SELECT client_id, fullname, address, email,phone , updated_by  FROM client', (error: any, results) => {
         if (error) {
           reject(error);
         } else {
@@ -68,7 +68,7 @@ export class ClientRepository {
   }
 
   public static async updateClient(client_id: number, clientData: Client): Promise<Client | null> {
-    const query = 'UPDATE client SET fullname = ?, email = ?, phone = ?, address = ?, updated_at = ?, updated_by = ?, deleted = ? WHERE clients_id = ?';
+    const query = 'UPDATE client SET fullname = ?, email = ?, phone = ?, address = ?, updated_at = ?, updated_by = ?, deleted = ? WHERE client_id = ?';
     return new Promise((resolve, reject) => {
       connection.execute(query, [clientData.fullname, clientData.address, clientData.phone, clientData.email,clientData.updated_at, clientData.updated_by, clientData.deleted, client_id], (error, result: ResultSetHeader) => {
         if (error) {

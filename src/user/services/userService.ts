@@ -7,10 +7,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const secretKey = process.env.SECRET || "";
-
-
-const saltRounds = 10;
+const secretKey = process.env.SECRET || ""; //tokens
+const saltRounds = 10; // HASHEOS
 
 export class userService {
 
@@ -20,7 +18,7 @@ export class userService {
             if(!user){
                 return null;
             }
-            const passwordMatch = await bcrypt.compare(password, user.password);
+            const passwordMatch = await bcrypt.compare(password, user.password); //HASEAR CONTRAS
 
             if (!passwordMatch) {
                 return null;
@@ -28,10 +26,10 @@ export class userService {
 
             const payload = {
                 user_id: user.user_id,
-                rol_id_pk: user.rol_id_fk,
+                rol_id_fk: user.rol_id_fk,
                 name: user.name
             }
-            return await jwt.sign(payload, secretKey, { expiresIn: '5m' });
+            return await jwt.sign(payload, secretKey, { expiresIn: '2 days' }); // duracion de la secret Key
 
         }catch (error: any){
             throw new Error(`Error al logearse: ${error.message}`);

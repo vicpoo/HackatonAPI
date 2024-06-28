@@ -9,7 +9,7 @@
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Victor Alejandro Y Katherine romina ",
+  "author": "Victor Alejandro Hernandez Perez Y Katherine Romina Espinoza Barrionuevo ",
   "license": "ISC",
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

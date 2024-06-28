@@ -1,6 +1,7 @@
 import { Request } from "express";
-import { EmployeePayload } from "./employePayLoad";
+import { UserPayload } from "./UserPayload";
 
 export interface AuthRequest extends Request {
-    employeeData?: EmployeePayload;
+    userData?: UserPayload;
 }
+
