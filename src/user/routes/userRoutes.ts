@@ -8,7 +8,7 @@ userRoutes.post('/login', loginUser);
 
 userRoutes.get('/', getUser);
 userRoutes.get('/:user_id', authMiddleware,getUserById);
-userRoutes.post('/', authMiddleware,createUser);
+userRoutes.post('/',createUser);
 userRoutes.put('/:user_id', authMiddleware, updateUser);
 userRoutes.delete('/:user_id' , authMiddleware, deleteUser);
 
