@@ -21,7 +21,7 @@ export const getClientById = async (req: Request, res: Response) => {
     if(client){
       res.status(201).json(client);
     }else{
-      res.status(404).json({ message: 'No se encontró el usuario' });
+      res.status(404).json({ message: 'No se encontró el cliente' });
     }
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -58,7 +58,7 @@ export const deleteClient = async (req: Request, res: Response) => {
   try {
     const deleted = await clientService.deleteClient(parseInt(req.params.client_id, 10));
     if(deleted){
-      res.status(201).json({ message: 'Se eliminó el empleado.' });
+      res.status(201).json({ message: 'Se eliminó el cliente.' });
     }else{
       res.status(404).json({ message: 'Algo salio mal' });
     }
