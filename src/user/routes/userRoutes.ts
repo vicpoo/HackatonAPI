@@ -6,7 +6,7 @@ const userRoutes: Router = Router();
 
 userRoutes.post('/login', loginUser);
 
-userRoutes.get('/', getUser);
+userRoutes.get('/',authMiddleware, getUser);
 userRoutes.get('/:user_id', authMiddleware,getUserById);
 userRoutes.post('/',createUser);
 userRoutes.put('/:user_id', authMiddleware, updateUser);

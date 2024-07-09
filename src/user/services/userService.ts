@@ -29,7 +29,7 @@ export class userService {
                 rol_id_fk: user.rol_id_fk,
                 name: user.name
             }
-            return await jwt.sign(payload, secretKey, { expiresIn: '2 days' }); // duracion de la secret Key
+            return await jwt.sign(payload, secretKey, { expiresIn: '2m' }); // duracion de la secret Key
 
         }catch (error: any){
             throw new Error(`Error al logearse: ${error.message}`);

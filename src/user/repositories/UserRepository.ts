@@ -36,7 +36,7 @@ export class UserRepository {
 
   public static async findByName(Name: string): Promise<User | null> {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT * FROM User WHERE name = ?', [Name], (error: any, results) => {
+      connection.query('SELECT * FROM user WHERE name = ?', [Name], (error: any, results) => {
         if (error) {
           reject(error);
         } else {

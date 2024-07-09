@@ -7,6 +7,7 @@ import clientRoutes from './client/routes/clientRoutes';
 import coffeeRoutes from './coffee/routes/coffeeRoutes';
 import userRoutes from './user/routes/userRoutes';
 import orderRoutes from './order/routes/orderRoutes';
+import rolRoutes from './rol_user/routes/rol_userRoutes'
 
 // Importar middlewares compartidos
 import { errorHandler } from './shared/middlewares/errorHandler';
@@ -28,6 +29,7 @@ app.use('/api/client', clientRoutes);
 app.use('/api/coffee',coffeeRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/order', orderRoutes);
+app.use('/api/rol', rolRoutes);
 
 // Middleware para manejar rutas no encontradas
 app.use(notFoundHandler);
