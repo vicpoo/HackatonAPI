@@ -1,12 +1,13 @@
-export interface Client{
+export interface Client {
     client_id: number;
-    fullname:string;
-    email:string;
-    phone:string;
-    address:string;
-    created_at: String;
+    firstname: string;
+    lastname: string;
+    email: string;
+    phone: string;
+    address: string;
+    created_at: string;
     created_by: string;
-    updated_at: String;
+    updated_at: string;
     updated_by: string;
     deleted: boolean;
 }

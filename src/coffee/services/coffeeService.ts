@@ -5,30 +5,29 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-
-export class coffeeService {
+export class CoffeeService {
 
     public static async getAllCoffee(): Promise<Coffee[]> {
-        try{
+        try {
             return await CoffeeRepository.findAll();
-        }catch (error: any){
-            throw new Error(`Error al obtener el cafe: ${error.message}`);
+        } catch (error: any) {
+            throw new Error(`Error al obtener el café: ${error.message}`);
         }
     }
 
     public static async getCoffeeById(coffeeId: number): Promise<Coffee | null> {
-        try{
+        try {
             return await CoffeeRepository.findById(coffeeId);
-        }catch (error: any){
-            throw new Error(`Error al encontrar el cafe: ${error.message}`);
+        } catch (error: any) {
+            throw new Error(`Error al encontrar el café: ${error.message}`);
         }
     }
 
-    public static async getCoffeeByName(Name: string): Promise<Coffee | null> {
-        try{
-            return await CoffeeRepository.findByName(Name);
-        }catch (error: any){
-            throw new Error(`Error al encontrar al cafe: ${error.message}`);
+    public static async getCoffeeByName(name: string): Promise<Coffee | null> {
+        try {
+            return await CoffeeRepository.findByName(name);
+        } catch (error: any) {
+            throw new Error(`Error al encontrar el café: ${error.message}`);
         }
     }
 
@@ -38,53 +37,56 @@ export class coffeeService {
             coffee.updated_at = DateUtils.formatDate(new Date());
             return await CoffeeRepository.createCoffee(coffee);
         } catch (error: any) {
-            throw new Error(`Error al crear el cafe: ${error.message}`);
+            throw new Error(`Error al crear el café: ${error.message}`);
         }
     }
 
-    public static async modifyCoffee(coffeeId: number, coffeeData: Coffee){
-        try{
-            const coffeeFinded =  await CoffeeRepository.findById(coffeeId);
+    public static async modifyCoffee(coffeeId: number, coffeeData: Coffee) {
+        try {
+            const coffeeFound = await CoffeeRepository.findById(coffeeId);
 
-            if(coffeeFinded){
-                if(coffeeData.name){
-                    coffeeFinded.name = coffeeData.name;
-                }
-                if(coffeeData.origin){
-                    coffeeFinded.origin = coffeeData.origin;
-                }
-                if(coffeeData.height){
-                    coffeeFinded.height = coffeeData.height;
-                }
-                if(coffeeData.qualification){
-                    coffeeFinded.qualification = coffeeData.qualification;
-                }
-                if(coffeeData.price){
-                    coffeeFinded.price = coffeeData.price;
-                }
-                if(coffeeData.inventory_quantity){
-                    coffeeFinded.inventory_quantity = coffeeData.inventory_quantity;
-                }
-                if(coffeeData.deleted){
-                    coffeeFinded.deleted = coffeeData.deleted;
-                }
-            }else{
+            if (coffeeFound) {
+                // Actualizar solo los campos definidos en coffeeData
+                Object.assign(coffeeFound, coffeeData);
+
+                coffeeFound.updated_at = DateUtils.formatDate(new Date());
+
+                return await CoffeeRepository.updateCoffee(coffeeId, coffeeFound);
+            } else {
                 return null;
             }
-            coffeeFinded.updated_by = coffeeData.updated_by
-            coffeeFinded.updated_at = DateUtils.formatDate(new Date());
-            return await CoffeeRepository.updateCoffee(coffeeId, coffeeFinded);
-        }catch (error: any){
-            throw new Error(`Error al modificar el cafe: ${error.message}`);
+        } catch (error: any) {
+            throw new Error(`Error al modificar el café: ${error.message}`);
         }
     }
 
-    public static async deleteCoffee(coffee_Id: number): Promise<boolean> {
-        try{
-            return await CoffeeRepository.deleteCoffee(coffee_Id);
-        }catch (error: any){
-            throw new Error(`Error al eliminar el cafe: ${error.message}`);
+    public static async deleteCoffee(coffeeId: number): Promise<boolean> {
+        try {
+            return await CoffeeRepository.deleteCoffee(coffeeId);
+        } catch (error: any) {
+            throw new Error(`Error al eliminar el café: ${error.message}`);
         }
     }
 
+    public static async incrementCoffeeStock(coffeeId: number, incrementQuantity: number): Promise<boolean> {
+        try {
+            // Obtener el café por su ID
+            const coffee = await CoffeeRepository.findById(coffeeId);
+
+            if (coffee) {
+                // Incrementar el stock
+                coffee.inventory_quantity += incrementQuantity;
+                coffee.updated_at = DateUtils.formatDate(new Date());
+
+                // Actualizar en la base de datos
+                const success = await CoffeeRepository.updateCoffee(coffeeId, coffee);
+
+                return success; // Devolver el resultado de la actualización
+            } else {
+                throw new Error(`No se encontró el café con ID ${coffeeId}`);
+            }
+        } catch (error: any) {
+            throw new Error(`Error al incrementar el stock del café: ${error.message}`);
+        }
+    }
 }
