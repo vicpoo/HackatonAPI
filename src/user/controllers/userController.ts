@@ -1,20 +1,20 @@
 import { Request, Response } from 'express';
 import { userService } from '../services/userService';
 
-export const loginUser= async (req: Request, res: Response) => {
-  const { name, password } = req.body;
+export const loginUser = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
   try {
-    const token = await userService.login(name, password);
+    const token = await userService.login(username, password);
 
     if (!token) {
-      res.status(401).json({ message: 'Invalid full name or password' });
-    }else{
+      res.status(401).json({ message: 'Invalid username or password' });
+    } else {
       res.status(200).json({ token });
     }
 
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Internal server error vale chettos' });
+    res.status(500).json({ message: 'Internal server error' });
   }
 }
 

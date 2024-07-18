@@ -7,18 +7,18 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const secretKey = process.env.SECRET || ""; //tokens
+const secretKey = process.env.SECRET || ""; // tokens
 const saltRounds = 10; // HASHEOS
 
 export class userService {
 
-    public static async login(name: string, password: string){
+    public static async login(username: string, password: string){
         try{
-            const user = await this.getUserBylName(name);
+            const user = await this.getUserByUsername(username);
             if(!user){
                 return null;
             }
-            const passwordMatch = await bcrypt.compare(password, user.password); //HASEAR CONTRAS
+            const passwordMatch = await bcrypt.compare(password, user.password); // HASEAR CONTRAS
 
             if (!passwordMatch) {
                 return null;
@@ -27,9 +27,11 @@ export class userService {
             const payload = {
                 user_id: user.user_id,
                 rol_id_fk: user.rol_id_fk,
-                name: user.name
-            }
-            return await jwt.sign(payload, secretKey, { expiresIn: '2m' }); // duracion de la secret Key
+                username: user.username,
+                firstname: user.firstname,
+                lastname: user.lastname
+            };
+            return await jwt.sign(payload, secretKey, { expiresIn: '2 days' }); // duracion de la secret Key
 
         }catch (error: any){
             throw new Error(`Error al logearse: ${error.message}`);
@@ -53,9 +55,9 @@ export class userService {
         }
     }
 
-    public static async getUserBylName(name: string): Promise<User | null> {
+    public static async getUserByUsername(username: string): Promise<User | null> {
         try{
-            return await UserRepository.findByName(name);
+            return await UserRepository.findByUsername(username);
         }catch (error: any){
             throw new Error(`Error al encontrar empleado: ${error.message}`);
         }
@@ -79,8 +81,14 @@ export class userService {
             const salt = await bcrypt.genSalt(saltRounds);
 
             if(userFinded){
-                if(userData.name){
-                    userFinded.name = userData.name;
+                if(userData.firstname){
+                    userFinded.firstname = userData.firstname;
+                }
+                if(userData.lastname){
+                    userFinded.lastname = userData.lastname;
+                }
+                if(userData.username){
+                    userFinded.username = userData.username;
                 }
                 if(userData.password){
                     userFinded.password = await bcrypt.hash(userData.password, salt);
@@ -97,7 +105,7 @@ export class userService {
             }else{
                 return null;
             }
-            userFinded.updated_by = userData.updated_by
+            userFinded.updated_by = userData.updated_by;
             userFinded.updated_at = DateUtils.formatDate(new Date());
             return await UserRepository.updateUser(userId, userFinded);
         }catch (error: any){
