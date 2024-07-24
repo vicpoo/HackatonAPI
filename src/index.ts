@@ -26,12 +26,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Habilitar CORS
-app.use(cors({
-  origin: 'http://localhost:5173', // Reemplaza con la URL de tu frontend
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: 'Content-Type, Authorization',
-  credentials: true
-}));
+app.use(cors());
 
 // Rutas de los módulos
 app.use('/api/client', clientRoutes);
