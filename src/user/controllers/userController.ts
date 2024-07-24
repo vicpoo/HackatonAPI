@@ -4,26 +4,26 @@ import  jwt  from 'jsonwebtoken';
 import { UserPayload } from '../../shared/config/types/UserPayload';
 const secretKey = process.env.SECRET || "";
 
-export const loginUser = async (req: Request, res: Response) => {
 
+export const loginUser = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
     const token = await userService.login(username, password);
+
     if (!token) {
-      res.status(401).json({ message: 'Invalid username or password' });
-    } else {
-      res.status(200).json({ token });
-      const  user = jwt.verify(token, secretKey) as UserPayload;
-            res.setHeader('Authorization', token);
-            res.setHeader('Access-Control-Expose-Headers', 'Authorization');
-            res.status(200).json({ token, user });
-    }
+      return res.status(401).json({ message: 'Invalid username or password' });
+    } 
+
+    const user = jwt.verify(token, secretKey) as UserPayload;
+    res.setHeader('Authorization', token);
+    res.setHeader('Access-Control-Expose-Headers', 'Authorization');
+    return res.status(200).json({ token, user });
 
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
-}
+};
 
 export const getUser = async (_req: Request, res: Response) => {
   try {
