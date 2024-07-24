@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors'; // Importar cors
 import * as dotenv from 'dotenv';
 
 // Importar rutas de módulos
@@ -7,7 +8,7 @@ import clientRoutes from './client/routes/clientRoutes';
 import coffeeRoutes from './coffee/routes/coffeeRoutes';
 import userRoutes from './user/routes/userRoutes';
 import orderRoutes from './order/routes/orderRoutes';
-import rolRoutes from './rol_user/routes/rol_userRoutes'
+import rolRoutes from './rol_user/routes/rol_userRoutes';
 
 // Importar middlewares compartidos
 import { errorHandler } from './shared/middlewares/errorHandler';
@@ -18,15 +19,23 @@ dotenv.config();
 
 // Crear la aplicación de Express
 const app: Application = express();
-const port: number = parseInt(process.env.PORT as string, 10);
+const port: number = parseInt(process.env.PORT as string, 10) || 3000;
 
 // Middleware de análisis del cuerpo
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Habilitar CORS
+app.use(cors({
+  origin: 'http://localhost:5173', // Reemplaza con la URL de tu frontend
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: 'Content-Type, Authorization',
+  credentials: true
+}));
+
 // Rutas de los módulos
 app.use('/api/client', clientRoutes);
-app.use('/api/coffee',coffeeRoutes);
+app.use('/api/coffee', coffeeRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/rol', rolRoutes);
