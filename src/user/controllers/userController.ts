@@ -1,15 +1,22 @@
 import { Request, Response } from 'express';
 import { userService } from '../services/userService';
+import  jwt  from 'jsonwebtoken';
+import { UserPayload } from '../../shared/config/types/UserPayload';
+const secretKey = process.env.SECRET || "";
 
 export const loginUser = async (req: Request, res: Response) => {
-  const { username, password } = req.body;
-  try {
-    const token = await userService.login(username, password);
 
+  try {
+    const { username, password } = req.body;
+    const token = await userService.login(username, password);
     if (!token) {
       res.status(401).json({ message: 'Invalid username or password' });
     } else {
       res.status(200).json({ token });
+      const  user = jwt.verify(token, secretKey) as UserPayload;
+            res.setHeader('Authorization', token);
+            res.setHeader('Access-Control-Expose-Headers', 'Authorization');
+            res.status(200).json({ token, user });
     }
 
   } catch (error) {
