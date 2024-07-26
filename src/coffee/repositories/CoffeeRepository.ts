@@ -41,11 +41,11 @@ export class CoffeeRepository {
     });
   }
 
-  public static async findByName(Name: string): Promise<Coffee | null> {
+  public static async findByName(name: string): Promise<Coffee | null> {
     return new Promise((resolve, reject) => {
       connection.query(
         'SELECT coffee_id, name, origin, height, qualification, price, inventory_quantity FROM coffee WHERE name = ?',
-        [Name],
+        [name],
         (error: any, results) => {
           if (error) {
             reject(error);
@@ -69,7 +69,7 @@ export class CoffeeRepository {
         coffee.name, coffee.origin, coffee.height, coffee.qualification, coffee.price, coffee.inventory_quantity, coffee.created_by, coffee.updated_by
       ], (error, result: ResultSetHeader) => {
         if (error) {
-          console.error("Error inserting coffee:", error); // Añadir un log de error
+          console.error("Error inserting coffee:", error);
           reject(error);
         } else {
           const createdCoffeeId = result.insertId;
@@ -80,7 +80,7 @@ export class CoffeeRepository {
     });
   }
 
-  public static async updateCoffee(coffee_id: number, coffeeData: Coffee): Promise<boolean> {
+  public static async updateCoffee(coffee_id: number, coffeeData: Partial<Coffee>): Promise<boolean> {
     const query =
       'UPDATE coffee SET name = ?, origin = ?, height = ?, qualification = ?, price = ?, inventory_quantity = ?, updated_at = NOW(), updated_by = ?, deleted = ? WHERE coffee_id = ?';
     return new Promise((resolve, reject) => {
@@ -94,14 +94,15 @@ export class CoffeeRepository {
           coffeeData.price,
           coffeeData.inventory_quantity,
           coffeeData.updated_by,
-          coffeeData.deleted,
+          coffeeData.deleted ?? 0,
           coffee_id
         ],
         (error) => {
           if (error) {
+            console.error("Error updating coffee:", error);
             reject(error);
           } else {
-            resolve(true); // Indicar éxito en la actualización
+            resolve(true);
           }
         }
       );
@@ -113,6 +114,7 @@ export class CoffeeRepository {
     return new Promise((resolve, reject) => {
       connection.execute(query, [coffee_id], (error) => {
         if (error) {
+          console.error("Error deleting coffee:", error);
           reject(error);
         } else {
           resolve(true);
@@ -121,11 +123,20 @@ export class CoffeeRepository {
     });
   }
 
-  public static async updateStock(coffee_id: number, newStock: number): Promise<boolean> {
-    const query = 'UPDATE coffee SET inventory_quantity = ? WHERE coffee_id = ?';
+  public static async updateStock(coffee_id: number, increment_quantity: number): Promise<boolean> {
+    // Fetch the current stock
+    const currentStock = await this.findById(coffee_id);
+    if (!currentStock) {
+      throw new Error("Coffee not found");
+    }
+    
+    const newStock = currentStock.inventory_quantity + increment_quantity;
+
+    const query = 'UPDATE coffee SET inventory_quantity = ?, updated_at = NOW() WHERE coffee_id = ?';
     return new Promise((resolve, reject) => {
       connection.execute(query, [newStock, coffee_id], (error) => {
         if (error) {
+          console.error("Error updating stock:", error);
           reject(error);
         } else {
           resolve(true);
