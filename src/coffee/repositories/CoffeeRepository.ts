@@ -6,78 +6,122 @@ export class CoffeeRepository {
 
   public static async findAll(): Promise<Coffee[]> {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT coffee_id, name, origin, height, qualification, price, inventory_quantity, FROM coffee', (error: any, results) => {
-        if (error) {
-          reject(error);
-        } else {
-          const coffee: Coffee[] = results as Coffee[];
-          resolve(coffee);
+      connection.query(
+        'SELECT coffee_id, name, origin, height, qualification, price, inventory_quantity FROM coffee',
+        (error: any, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            const coffee: Coffee[] = results as Coffee[];
+            resolve(coffee);
+          }
         }
-      });
+      );
     });
   }
 
   public static async findById(coffee_id: number): Promise<Coffee | null> {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT * FROM coffee WHERE coffee_id = ?', [coffee_id], (error: any, results) => {
-        if (error) {
-          reject(error);
-        } else {
-          const coffee: Coffee[] = results as Coffee[];
-          if (coffee.length > 0) {
-            resolve(coffee[0]);
+      connection.query(
+        'SELECT coffee_id, name, origin, height, qualification, price, inventory_quantity FROM coffee WHERE coffee_id = ?',
+        [coffee_id],
+        (error: any, results) => {
+          if (error) {
+            reject(error);
           } else {
-            resolve(null);
+            const coffee: Coffee[] = results as Coffee[];
+            if (coffee.length > 0) {
+              resolve(coffee[0]);
+            } else {
+              resolve(null);
+            }
           }
         }
-      });
+      );
     });
   }
 
   public static async findByName(Name: string): Promise<Coffee | null> {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT * FROM coffee WHERE name = ?', [Name], (error: any, results) => {
-        if (error) {
-          reject(error);
-        } else {
-          const coffee: Coffee[] = results as Coffee[];
-          if (coffee.length > 0) {
-            resolve(coffee[0]);
+      connection.query(
+        'SELECT coffee_id, name, origin, height, qualification, price, inventory_quantity FROM coffee WHERE name = ?',
+        [Name],
+        (error: any, results) => {
+          if (error) {
+            reject(error);
           } else {
-            resolve(null);
+            const coffee: Coffee[] = results as Coffee[];
+            if (coffee.length > 0) {
+              resolve(coffee[0]);
+            } else {
+              resolve(null);
+            }
           }
         }
-      });
+      );
     });
   }
 
   public static async createCoffee(coffee: Coffee): Promise<Coffee> {
-    const query = 'INSERT INTO coffee (name, origin, height, qualification, price, inventory_quantity, created_at, created_by, updated_at, updated_by, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?)';
+    const query =
+      'INSERT INTO coffee (name, origin, height, qualification, price, inventory_quantity, created_at, created_by, updated_at, updated_by, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     return new Promise((resolve, reject) => {
-      connection.execute(query, [ coffee.name, coffee.origin, coffee.height, coffee.qualification, coffee.price, coffee.inventory_quantity, coffee.created_at, coffee.created_by, coffee.updated_at, coffee.updated_by, coffee.deleted], (error, result: ResultSetHeader) => {
-        if (error) {
-          reject(error);
-        } else {
-          const createdCoffeeId = result.insertId;
-          const createdCoffee: Coffee = { ...coffee, coffee_id: createdCoffeeId };
-          resolve(createdCoffee);
+      connection.execute(
+        query,
+        [
+          coffee.name,
+          coffee.origin,
+          coffee.height,
+          coffee.qualification,
+          coffee.price,
+          coffee.inventory_quantity,
+          coffee.created_at,
+          coffee.created_by,
+          coffee.updated_at,
+          coffee.updated_by,
+          coffee.deleted
+        ],
+        (error, result: ResultSetHeader) => {
+          if (error) {
+            reject(error);
+          } else {
+            const createdCoffeeId = result.insertId;
+            const createdCoffee: Coffee = { ...coffee, coffee_id: createdCoffeeId };
+            resolve(createdCoffee);
+          }
         }
-      });
+      );
     });
   }
 
   public static async updateCoffee(coffee_id: number, coffeeData: Coffee): Promise<boolean> {
-    const query = 'UPDATE coffee SET name = ?, origin = ?, height = ?, qualification = ?, price = ?, inventory_quantity = ?, updated_at = ?, updated_by = ?, deleted = ? WHERE coffee_id = ?';
+    const query =
+      'UPDATE coffee SET name = ?, origin = ?, height = ?, qualification = ?, price = ?, inventory_quantity = ?, updated_at = ?, updated_by = ?, deleted = ? WHERE coffee_id = ?';
     return new Promise((resolve, reject) => {
-        connection.execute(query, [ coffeeData.name, coffeeData.origin, coffeeData.height, coffeeData.qualification, coffeeData.price, coffeeData.inventory_quantity, coffeeData.updated_at, coffeeData.updated_by, coffeeData.deleted, coffee_id ], (error) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(true); // Indicar éxito en la actualización
-            }
-        });
+      connection.execute(
+        query,
+        [
+          coffeeData.name,
+          coffeeData.origin,
+          coffeeData.height,
+          coffeeData.qualification,
+          coffeeData.price,
+          coffeeData.inventory_quantity,
+          coffeeData.updated_at,
+          coffeeData.updated_by,
+          coffeeData.deleted,
+          coffee_id
+        ],
+        (error) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(true); // Indicar éxito en la actualización
+          }
+        }
+      );
     });
-}
+  }
 
   public static async deleteCoffee(coffee_id: number): Promise<boolean> {
     const query = 'DELETE FROM coffee WHERE coffee_id = ?';
