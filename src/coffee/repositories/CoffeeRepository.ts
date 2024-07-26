@@ -63,34 +63,20 @@ export class CoffeeRepository {
   }
 
   public static async createCoffee(coffee: Coffee): Promise<Coffee> {
-    const query =
-      'INSERT INTO coffee (name, origin, height, qualification, price, inventory_quantity, created_at, created_by, updated_at, updated_by, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO coffee (name, origin, height, qualification, price, inventory_quantity, created_at, created_by, updated_at, updated_by, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     return new Promise((resolve, reject) => {
-      connection.execute(
-        query,
-        [
-          coffee.name,
-          coffee.origin,
-          coffee.height,
-          coffee.qualification,
-          coffee.price,
-          coffee.inventory_quantity,
-          coffee.created_at,
-          coffee.created_by,
-          coffee.updated_at,
-          coffee.updated_by,
-          coffee.deleted
-        ],
-        (error, result: ResultSetHeader) => {
-          if (error) {
-            reject(error);
-          } else {
-            const createdCoffeeId = result.insertId;
-            const createdCoffee: Coffee = { ...coffee, coffee_id: createdCoffeeId };
-            resolve(createdCoffee);
-          }
+      connection.execute(query, [
+        coffee.name, coffee.origin, coffee.height, coffee.qualification, coffee.price, coffee.inventory_quantity, coffee.created_at, coffee.created_by, coffee.updated_at, coffee.updated_by, coffee.deleted
+      ], (error, result: ResultSetHeader) => {
+        if (error) {
+          console.error("Error inserting coffee:", error); // Añadir un log de error
+          reject(error);
+        } else {
+          const createdCoffeeId = result.insertId;
+          const createdCoffee: Coffee = { ...coffee, coffee_id: createdCoffeeId };
+          resolve(createdCoffee);
         }
-      );
+      });
     });
   }
 
