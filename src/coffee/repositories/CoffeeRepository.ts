@@ -6,7 +6,7 @@ export class CoffeeRepository {
 
   public static async findAll(): Promise<Coffee[]> {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT coffee_id, name, origin FROM coffee', (error: any, results) => {
+      connection.query('SELECT coffee_id, name, origin, height, qualification, price, inventory_quantity, FROM coffee', (error: any, results) => {
         if (error) {
           reject(error);
         } else {
