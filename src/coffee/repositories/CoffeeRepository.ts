@@ -63,10 +63,10 @@ export class CoffeeRepository {
   }
 
   public static async createCoffee(coffee: Coffee): Promise<Coffee> {
-    const query = 'INSERT INTO coffee (name, origin, height, qualification, price, inventory_quantity, created_at, created_by, updated_at, updated_by, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO coffee (name, origin, height, qualification, price, inventory_quantity, created_at, created_by, updated_at, updated_by, deleted) VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, NOW(), ?, 0)';
     return new Promise((resolve, reject) => {
       connection.execute(query, [
-        coffee.name, coffee.origin, coffee.height, coffee.qualification, coffee.price, coffee.inventory_quantity, coffee.created_at, coffee.created_by, coffee.updated_at, coffee.updated_by, coffee.deleted
+        coffee.name, coffee.origin, coffee.height, coffee.qualification, coffee.price, coffee.inventory_quantity, coffee.created_by, coffee.updated_by
       ], (error, result: ResultSetHeader) => {
         if (error) {
           console.error("Error inserting coffee:", error); // Añadir un log de error
@@ -82,7 +82,7 @@ export class CoffeeRepository {
 
   public static async updateCoffee(coffee_id: number, coffeeData: Coffee): Promise<boolean> {
     const query =
-      'UPDATE coffee SET name = ?, origin = ?, height = ?, qualification = ?, price = ?, inventory_quantity = ?, updated_at = ?, updated_by = ?, deleted = ? WHERE coffee_id = ?';
+      'UPDATE coffee SET name = ?, origin = ?, height = ?, qualification = ?, price = ?, inventory_quantity = ?, updated_at = NOW(), updated_by = ?, deleted = ? WHERE coffee_id = ?';
     return new Promise((resolve, reject) => {
       connection.execute(
         query,
@@ -93,7 +93,6 @@ export class CoffeeRepository {
           coffeeData.qualification,
           coffeeData.price,
           coffeeData.inventory_quantity,
-          coffeeData.updated_at,
           coffeeData.updated_by,
           coffeeData.deleted,
           coffee_id
