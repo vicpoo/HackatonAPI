@@ -3,13 +3,14 @@ import connection from '../../shared/config/database';
 import { Coffee } from '../models/Coffee';
 
 export class CoffeeRepository {
-
+  
   public static async findAll(): Promise<Coffee[]> {
     return new Promise((resolve, reject) => {
       connection.query(
         'SELECT coffee_id, name, origin, height, qualification, price, inventory_quantity FROM coffee',
         (error: any, results) => {
           if (error) {
+            console.error("Error fetching coffees:", error);
             reject(error);
           } else {
             const coffee: Coffee[] = results as Coffee[];
@@ -27,6 +28,7 @@ export class CoffeeRepository {
         [coffee_id],
         (error: any, results) => {
           if (error) {
+            console.error("Error fetching coffee by ID:", error);
             reject(error);
           } else {
             const coffee: Coffee[] = results as Coffee[];
@@ -48,6 +50,7 @@ export class CoffeeRepository {
         [name],
         (error: any, results) => {
           if (error) {
+            console.error("Error fetching coffee by name:", error);
             reject(error);
           } else {
             const coffee: Coffee[] = results as Coffee[];
@@ -123,14 +126,13 @@ export class CoffeeRepository {
     });
   }
 
-  public static async updateStock(coffee_id: number, increment_quantity: number): Promise<boolean> {
-    // Fetch the current stock
+  public static async updateStock(coffee_id: number, quantityChange: number): Promise<boolean> {
     const currentStock = await this.findById(coffee_id);
     if (!currentStock) {
       throw new Error("Coffee not found");
     }
     
-    const newStock = currentStock.inventory_quantity + increment_quantity;
+    const newStock = currentStock.inventory_quantity + quantityChange;
 
     const query = 'UPDATE coffee SET inventory_quantity = ?, updated_at = NOW() WHERE coffee_id = ?';
     return new Promise((resolve, reject) => {

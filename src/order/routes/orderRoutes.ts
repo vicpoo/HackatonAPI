@@ -5,8 +5,8 @@ import { authMiddleware } from '../../shared/middlewares/auth';
 const orderRoutes: Router = Router();
 
 orderRoutes.get('/', getOrder);
-orderRoutes.get('/:order_id', authMiddleware,getOrderById);
-orderRoutes.post('/', createOrder);
+orderRoutes.get('/:order_id', authMiddleware, getOrderById);
+orderRoutes.post('/', createOrder); // Ahora se debe enviar también orderCoffees
 orderRoutes.put('/:order_id', updateOrder);
 orderRoutes.delete('/:order_id', deleteOrder);
 
