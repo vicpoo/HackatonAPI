@@ -1,66 +1,77 @@
 import { OrderRepository } from "../repositories/OrderRepository";
 import { Order } from "../models/Order";
-import { CoffeeService } from "../../coffee/services/coffeeService";
+import { DateUtils } from "../../shared/utils/DateUtils";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export class orderService {
 
-    public static async getAllOrders(): Promise<Order[]> {
-        try {
+    public static async getAllOrder(): Promise<Order[]> {
+        try{
             return await OrderRepository.findAll();
-        } catch (error: any) {
-            throw new Error(`Error al obtener las órdenes: ${error.message}`);
+        }catch (error: any){
+            throw new Error(`Error al obtener las ordenes: ${error.message}`);
         }
     }
 
     public static async getOrderById(orderId: number): Promise<Order | null> {
-        try {
+        try{
             return await OrderRepository.findById(orderId);
-        } catch (error: any) {
+        }catch (error: any){
             throw new Error(`Error al encontrar la orden: ${error.message}`);
         }
     }
 
-    public static async addOrder(order: Order): Promise<Order> {
+    public static async getOrderByDate(date_orders: string): Promise<Order | null> {
+        try{
+            return await OrderRepository.findByDate(date_orders);
+        }catch (error: any){
+            throw new Error(`Error al encontrar la orden: ${error.message}`);
+        }
+    }
+
+    public static async addOrder(order: Order) {
         try {
-            const newOrder = await OrderRepository.createOrder(order);
-            return newOrder;
+            order.created_at = DateUtils.formatDate(new Date());
+            order.updated_at = DateUtils.formatDate(new Date());
+            return await OrderRepository.createOrder(order);
         } catch (error: any) {
             throw new Error(`Error al crear la orden: ${error.message}`);
         }
     }
 
-    public static async addOrderWithCoffees(order: Order, coffees: { coffee_id: number, quantity: number }[]): Promise<Order> {
-        try {
-            const newOrder = await OrderRepository.createOrder(order);
-            for (const coffee of coffees) {
-                await OrderRepository.addCoffeeToOrder(newOrder.order_id, coffee.coffee_id, coffee.quantity);
-                await CoffeeService.incrementCoffeeStock(coffee.coffee_id, -coffee.quantity);
-            }
-            return newOrder;
-        } catch (error: any) {
-            throw new Error(`Error al crear la orden: ${error.message}`);
-        }
-    }
+    public static async modifyOrder(orderId: number, orderData: Order){
+        try{
+            const orderFinded =  await OrderRepository.findById(orderId);
 
-    public static async modifyOrder(orderId: number, order: Order, coffees: { coffee_id: number, quantity: number }[]): Promise<Order> {
-        try {
-            await OrderRepository.updateOrder(orderId, order);
-            await OrderRepository.deleteCoffeesFromOrder(orderId);
-            for (const coffee of coffees) {
-                await OrderRepository.addCoffeeToOrder(orderId, coffee.coffee_id, coffee.quantity);
-                await CoffeeService.incrementCoffeeStock(coffee.coffee_id, -coffee.quantity);
+            if(orderFinded){
+                if(orderData.date_orders){
+                    orderFinded.date_orders = orderData.date_orders;
+                }
+                if(orderData.client_id_fk){
+                    orderFinded.client_id_fk = orderData.client_id_fk;
+                }
+                if(orderData.deleted){
+                    orderFinded.deleted = orderData.deleted;
+                }
+            }else{
+                return null;
             }
-            return order;
-        } catch (error: any) {
-            throw new Error(`Error al actualizar la orden: ${error.message}`);
+            orderFinded.updated_by = orderData.updated_by
+            orderFinded.updated_at = DateUtils.formatDate(new Date());
+            return await OrderRepository.updateOrder(orderId, orderFinded);
+        }catch (error: any){
+            throw new Error(`Error al modificar la orden: ${error.message}`);
         }
     }
 
     public static async deleteOrder(orderId: number): Promise<boolean> {
-        try {
+        try{
             return await OrderRepository.deleteOrder(orderId);
-        } catch (error: any) {
+        }catch (error: any){
             throw new Error(`Error al eliminar la orden: ${error.message}`);
         }
     }
+
 }
