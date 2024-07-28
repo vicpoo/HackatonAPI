@@ -11,6 +11,11 @@ export const createOrder = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Faltan datos para crear la orden' });
     }
     
+    // Validar que `orderCoffees` sea un array
+    if (!Array.isArray(orderCoffees)) {
+      return res.status(400).json({ message: 'Los productos deben ser un array' });
+    }
+
     const newOrder = await OrderService.addOrder(order, orderCoffees);
     
     if (newOrder) {
