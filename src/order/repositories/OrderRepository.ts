@@ -4,7 +4,6 @@ import { Order } from '../models/Order';
 
 export class OrderRepository {
 
-  // Método para obtener todas las órdenes
   public static async findAll(): Promise<Order[]> {
     return new Promise((resolve, reject) => {
       connection.query('SELECT order_id, date_orders, client_id_fk FROM `order`', (error, results) => {
@@ -18,7 +17,6 @@ export class OrderRepository {
     });
   }
 
-  // Método para obtener una orden por su ID
   public static async findById(order_id: number): Promise<Order | null> {
     return new Promise((resolve, reject) => {
       connection.query('SELECT order_id, date_orders, client_id_fk FROM `order` WHERE order_id = ?', [order_id], (error, results) => {
@@ -36,7 +34,6 @@ export class OrderRepository {
     });
   }
 
-  // Método para crear una nueva orden
   public static async createOrder(order: Order): Promise<Order> {
     const query = 'INSERT INTO `order` (date_orders, client_id_fk) VALUES (?, ?)';
     return new Promise((resolve, reject) => {
@@ -52,7 +49,6 @@ export class OrderRepository {
     });
   }
 
-  // Método para insertar registros en la tabla pivote order_coffee
   public static async addCoffeeToOrder(orderId: number, coffeeId: number, quantity: number): Promise<void> {
     const query = 'INSERT INTO order_coffee (order_id, coffee_id, quantity) VALUES (?, ?, ?)';
     return new Promise((resolve, reject) => {
@@ -66,7 +62,6 @@ export class OrderRepository {
     });
   }
 
-  // Método para eliminar registros en la tabla pivote order_coffee
   public static async deleteCoffeesFromOrder(orderId: number): Promise<void> {
     const query = 'DELETE FROM order_coffee WHERE order_id = ?';
     return new Promise((resolve, reject) => {
@@ -80,7 +75,6 @@ export class OrderRepository {
     });
   }
 
-  // Método para eliminar una orden por su ID
   public static async deleteOrder(order_id: number): Promise<boolean> {
     const query = 'DELETE FROM `order` WHERE order_id = ?';
     return new Promise((resolve, reject) => {
@@ -94,7 +88,6 @@ export class OrderRepository {
     });
   }
 
-  // Método para actualizar una orden por su ID
   public static async updateOrder(orderId: number, order: Order): Promise<void> {
     const query = 'UPDATE `order` SET date_orders = ?, client_id_fk = ? WHERE order_id = ?';
     return new Promise((resolve, reject) => {

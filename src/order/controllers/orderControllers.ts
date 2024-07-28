@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { orderService } from '../services/orderService';
 
-// Controlador para obtener todas las órdenes
 export const getOrder = async (_req: Request, res: Response) => {
   try {
     const order = await orderService.getAllOrders();
@@ -15,7 +14,6 @@ export const getOrder = async (_req: Request, res: Response) => {
   }
 };
 
-// Controlador para obtener una orden por su ID
 export const getOrderById = async (req: Request, res: Response) => {
   try {
     const order = await orderService.getOrderById(parseInt(req.params.order_id, 10));
@@ -29,7 +27,6 @@ export const getOrderById = async (req: Request, res: Response) => {
   }
 };
 
-// Controlador para crear una nueva orden
 export const createOrder = async (req: Request, res: Response) => {
   try {
     const newOrder = await orderService.addOrder(req.body);
@@ -43,10 +40,9 @@ export const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-// Controlador para crear una nueva orden con cafés asociados
 export const createOrderWithCoffees = async (req: Request, res: Response) => {
   try {
-    const { order, coffees } = req.body; // Se espera que el cuerpo de la solicitud tenga una orden y una lista de cafés
+    const { order, coffees } = req.body;
     const newOrder = await orderService.addOrderWithCoffees(order, coffees);
     if (newOrder) {
       res.status(201).json(newOrder);
@@ -58,7 +54,6 @@ export const createOrderWithCoffees = async (req: Request, res: Response) => {
   }
 };
 
-// Controlador para actualizar una orden existente
 export const updateOrder = async (req: Request, res: Response) => {
   try {
     const { order, coffees } = req.body;
@@ -73,7 +68,6 @@ export const updateOrder = async (req: Request, res: Response) => {
   }
 };
 
-// Controlador para eliminar una orden por su ID
 export const deleteOrder = async (req: Request, res: Response) => {
   try {
     const deleted = await orderService.deleteOrder(parseInt(req.params.order_id, 10));
