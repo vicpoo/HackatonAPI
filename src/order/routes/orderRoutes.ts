@@ -4,6 +4,7 @@ import { authMiddleware } from '../../shared/middlewares/auth';
 
 const orderRoutes: Router = Router();
 
+// Definición de las rutas y asignación de controladores
 orderRoutes.get('/', getOrder); // Obtener todas las órdenes
 orderRoutes.get('/:order_id', authMiddleware, getOrderById); // Obtener una orden por ID
 orderRoutes.post('/', createOrder); // Crear una nueva orden
